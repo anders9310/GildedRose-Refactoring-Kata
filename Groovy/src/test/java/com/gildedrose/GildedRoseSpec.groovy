@@ -59,21 +59,6 @@ class GildedRoseSpec extends Specification {
             sellIn << [-1, 0, 1, 2]
     }
 
-    @Ignore("This is not enforced by the solution")
-    @Unroll
-    void "Sulfuras always has item quality 80"() {
-        given:
-            Item sulfuras = new Item(SULFURAS, 10, quality)
-            GildedRose app = new GildedRose([sulfuras] as Item[])
-            assert sulfuras.quality == 80
-        when:
-            app.updateQuality()
-        then:
-            sulfuras.quality == 80
-        where:
-            quality << [0, 1, 79, 80, 81]
-    }
-
     @Unroll
     void "Backstage pass is updated one time"() {
         given:
