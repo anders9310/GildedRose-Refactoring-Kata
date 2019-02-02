@@ -15,14 +15,19 @@ class GildedRose {
             switch (item.name) {
                 case AGED_BRIE:
                     updateQualityForAgedBrie(item)
+                    updateSellIn(item)
                     break
                 case BACKSTAGE_PASS:
                     updateQualityForBackstagePass(item)
+                    updateSellIn(item)
+                    break
+                case SULFURAS:
                     break
                 default:
                     updateQualityForItem(item)
+                    updateSellIn(item)
             }
-            updateSellIn(item)
+
         }
     }
 
@@ -60,25 +65,15 @@ class GildedRose {
 
     private void updateQualityForItem(Item item) {
         if (item.quality > 0) {
-            decreaseQualityIfNotLegendary(item)
-        }
-        if (item.sellIn < 1) {
-            if (item.quality > 0) {
-                decreaseQualityIfNotLegendary(item)
+            if (item.sellIn > 0) {
+                item.quality -= 1
+            } else {
+                item.quality -= 2
             }
-        }
-
-    }
-
-    private void decreaseQualityIfNotLegendary(Item item) {
-        if (!item.name.equals(SULFURAS)) {
-            item.quality = item.quality - 1
         }
     }
 
     private void updateSellIn(Item item) {
-        if (!item.name.equals(SULFURAS)) {
-            item.sellIn = item.sellIn - 1
-        }
+        item.sellIn = item.sellIn - 1
     }
 }

@@ -5,7 +5,8 @@ import spock.lang.Specification
 import spock.lang.Unroll
 /*TODO test cases
 * SellIn date for Sulfuras is unchanged
-* quality thresholds for all different item types*/
+* quality thresholds for all different item types
+* Quality increase for aged brie after it is supposed to be sold*/
 class GildedRoseSpec extends Specification {
 
     static final String SULFURAS = "Sulfuras, Hand of Ragnaros"
