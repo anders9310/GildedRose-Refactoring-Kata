@@ -1,9 +1,11 @@
 package com.gildedrose
 
-import spock.lang.Ignore
+
 import spock.lang.Specification
 import spock.lang.Unroll
-
+/*TODO test cases
+* SellIn date for Sulfuras is unchanged
+* quality thresholds for all different item types*/
 class GildedRoseSpec extends Specification {
 
     static final String SULFURAS = "Sulfuras, Hand of Ragnaros"
