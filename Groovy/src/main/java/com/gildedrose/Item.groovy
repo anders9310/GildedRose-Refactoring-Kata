@@ -37,4 +37,12 @@ abstract class Item {
     abstract int getMinQuality()
 
     abstract int getQualityDifference()
+
+    protected int defaultQualityDifference() {
+        if (sellIn > 0) {
+            return -1
+        } else {
+            return -2
+        }
+    }
 }

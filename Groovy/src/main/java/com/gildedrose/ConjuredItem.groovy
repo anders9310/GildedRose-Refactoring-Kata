@@ -1,12 +1,12 @@
 package com.gildedrose
 
-class RegularItem extends Item {
-    RegularItem(String name, int sellIn, int quality) {
+class ConjuredItem extends Item {
+    ConjuredItem(String name, int sellIn, int quality) {
         super(name, sellIn, quality)
     }
 
     void updateSellIn() {
-        sellIn -= 1
+
     }
 
     int getMaxQuality() {
@@ -18,6 +18,6 @@ class RegularItem extends Item {
     }
 
     int getQualityDifference() {
-        return defaultQualityDifference()
+        return defaultQualityDifference() * 2
     }
 }

@@ -25,7 +25,7 @@ class GildedRoseSpec extends Specification {
             foo.sellIn == sellInBefore - 1
         where:
             qualityBefore | sellInBefore | qualityAfter
-            10            | 1            | 9
+            10            | 2            | 9
             10            | 1            | 9
             10            | 0            | 8
             10            | -1           | 8
@@ -91,6 +91,29 @@ class GildedRoseSpec extends Specification {
             10            | 1      | 13
             10            | 0      | 0
             10            | -1     | 0
+    }
+
+    @Unroll
+    void "the quality of a conjured item is updated one time"() {
+        given:
+            Item foo = new ConjuredItem("foo", sellInBefore, qualityBefore)
+            GildedRose app = new GildedRose([foo] as Item[])
+        when:
+            app.updateQuality()
+        then:
+            foo.quality == qualityAfter
+        where:
+            qualityBefore | sellInBefore | qualityAfter
+            10            | 2            | 8
+            10            | 1            | 8
+            10            | 0            | 6
+            10            | -1           | 6
+            3             | 1            | 1
+            2             | 1            | 0
+            0             | 1            | 0
+            5             | 0            | 1
+            4             | 0            | 0
+            0             | 0            | 0
     }
 
     void "Item recognition is case sensitive"() {
