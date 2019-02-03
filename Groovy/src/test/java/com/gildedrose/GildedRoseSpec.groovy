@@ -3,19 +3,20 @@ package com.gildedrose
 
 import spock.lang.Specification
 import spock.lang.Unroll
+
 /*TODO test cases
 * SellIn date for Sulfuras is unchanged
-* quality thresholds for all different item types
-* Quality increase for aged brie after it is supposed to be sold*/
-class GildedRoseSpec extends Specification {
+* quality thresholds for all different item types*/
 
-    static final String SULFURAS = "Sulfuras, Hand of Ragnaros"
-    static final String BACKSTAGE_PASS = "Backstage passes to a TAFKAL80ETC concert"
+/*Cases discovered that are not covered by the specification:
+* Quality increase for aged brie after it is supposed to be sold*/
+
+class GildedRoseSpec extends Specification {
 
     @Unroll
     void "the quality of an ordinary item is updated one time"() {
         given:
-            Item foo = new Item("foo", sellInBefore, qualityBefore)
+            Item foo = new RegularItem("foo", sellInBefore, qualityBefore)
             GildedRose app = new GildedRose([foo] as Item[])
         when:
             app.updateQuality()
@@ -30,29 +31,38 @@ class GildedRoseSpec extends Specification {
             10            | -1           | 8
             1             | 1            | 0
             0             | 1            | 0
+            1             | 0            | 0
+            0             | 0            | 0
     }
 
     @Unroll
     void "Aged brie is updated one time"() {
         given:
-            Item agedBrie = new Item("Aged Brie", 10, qualityBefore)
+            Item agedBrie = new AgedBrie(sellInBefore, qualityBefore)
             GildedRose app = new GildedRose([agedBrie] as Item[])
         when:
             app.updateQuality()
         then:
             agedBrie.quality == qualityAfter
         where:
-            qualityBefore | qualityAfter
-            0             | 1
-            1             | 2
-            49            | 50
-            50            | 50
+            qualityBefore | sellInBefore | qualityAfter
+            0             | 1            | 1
+            1             | 1            | 2
+            48            | 1            | 49
+            49            | 1            | 50
+            50            | 1            | 50
+            0             | 0            | 2
+            1             | 0            | 3
+            47            | 0            | 49
+            48            | 0            | 50
+            49            | 0            | 50
+            50            | 0            | 50
     }
 
     @Unroll
     void "Legendary item is updated one time"() {
         given:
-            Item legendaryItem = new Item(SULFURAS, sellIn, 80)
+            Item legendaryItem = new Sulfuras()
             GildedRose app = new GildedRose([legendaryItem] as Item[])
         when:
             app.updateQuality()
@@ -65,7 +75,7 @@ class GildedRoseSpec extends Specification {
     @Unroll
     void "Backstage pass is updated one time"() {
         given:
-            Item backstagePass = new Item(BACKSTAGE_PASS, sellIn, qualityBefore)
+            Item backstagePass = new BackstagePass(sellIn, qualityBefore)
             GildedRose app = new GildedRose([backstagePass] as Item[])
         when:
             app.updateQuality()
@@ -86,8 +96,8 @@ class GildedRoseSpec extends Specification {
     void "Item recognition is case sensitive"() {
         given:
             int qualityBefore = 10
-            Item specialItem = new Item("Aged Brie", 10, qualityBefore)
-            Item specialItemInLowercase = new Item("aged brie", 10, qualityBefore)
+            Item specialItem = new AgedBrie(10, qualityBefore)
+            Item specialItemInLowercase = new RegularItem("aged brie", 10, qualityBefore)
             Item[] items = [specialItem, specialItemInLowercase]
             GildedRose app = new GildedRose(items)
         when:

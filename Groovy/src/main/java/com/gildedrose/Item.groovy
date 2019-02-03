@@ -1,6 +1,6 @@
 package com.gildedrose
 
-class Item {
+abstract class Item {
 
     String name
 
@@ -14,8 +14,27 @@ class Item {
         this.quality = quality
     }
 
-   @Override
-   String toString() {
+    @Override
+    String toString() {
         return this.name + ", " + this.sellIn + ", " + this.quality
     }
+
+    void updateQuality() {
+        int newQuality = quality + getQualityDifference()
+        if (newQuality > getMaxQuality()) {
+            quality = getMaxQuality()
+        } else if (newQuality < getMinQuality()) {
+            quality = getMinQuality()
+        } else {
+            quality = newQuality
+        }
+    }
+
+    abstract void updateSellIn()
+
+    abstract int getMaxQuality()
+
+    abstract int getMinQuality()
+
+    abstract int getQualityDifference()
 }
