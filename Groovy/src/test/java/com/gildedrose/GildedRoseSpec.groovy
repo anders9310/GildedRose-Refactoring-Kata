@@ -1,6 +1,6 @@
 package com.gildedrose
 
-import spock.lang.Ignore
+
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -8,6 +8,7 @@ class GildedRoseSpec extends Specification {
 
     static final String SULFURAS = "Sulfuras, Hand of Ragnaros"
     static final String BACKSTAGE_PASS = "Backstage passes to a TAFKAL80ETC concert"
+    static final String AGED_BRIE = "Aged Brie"
 
     @Unroll
     void "the quality of an ordinary item is updated one time"() {
@@ -21,29 +22,38 @@ class GildedRoseSpec extends Specification {
             foo.sellIn == sellInBefore - 1
         where:
             qualityBefore | sellInBefore | qualityAfter
-            10            | 1            | 9
+            10            | 2            | 9
             10            | 1            | 9
             10            | 0            | 8
             10            | -1           | 8
             1             | 1            | 0
             0             | 1            | 0
+            1             | 0            | 0
+            0             | 0            | 0
     }
 
     @Unroll
     void "Aged brie is updated one time"() {
         given:
-            Item agedBrie = new Item("Aged Brie", 10, qualityBefore)
+            Item agedBrie = new Item(AGED_BRIE, sellInBefore, qualityBefore)
             GildedRose app = new GildedRose([agedBrie] as Item[])
         when:
             app.updateQuality()
         then:
             agedBrie.quality == qualityAfter
         where:
-            qualityBefore | qualityAfter
-            0             | 1
-            1             | 2
-            49            | 50
-            50            | 50
+            qualityBefore | sellInBefore | qualityAfter
+            0             | 1            | 1
+            1             | 1            | 2
+            48            | 1            | 49
+            49            | 1            | 50
+            50            | 1            | 50
+            0             | 0            | 2
+            1             | 0            | 3
+            47            | 0            | 49
+            48            | 0            | 50
+            49            | 0            | 50
+            50            | 0            | 50
     }
 
     @Unroll
@@ -83,8 +93,8 @@ class GildedRoseSpec extends Specification {
     void "Item recognition is case sensitive"() {
         given:
             int qualityBefore = 10
-            Item specialItem = new Item("Aged Brie", 10, qualityBefore)
-            Item specialItemInLowercase = new Item("aged brie", 10, qualityBefore)
+            Item specialItem = new Item(AGED_BRIE, 10, qualityBefore)
+            Item specialItemInLowercase = new Item(AGED_BRIE.toLowerCase(), 10, qualityBefore)
             Item[] items = [specialItem, specialItemInLowercase]
             GildedRose app = new GildedRose(items)
         when:
