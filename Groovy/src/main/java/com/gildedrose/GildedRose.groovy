@@ -32,44 +32,46 @@ class GildedRose {
     }
 
     private void updateQualityForBackstagePass(Item item) {
-        if (item.quality < 50) {
-            item.quality = item.quality + 1
-
-            if (item.sellIn < 11) {
-                if (item.quality < 50) {
-                    item.quality += 1
-                }
-            }
-
-            if (item.sellIn < 6) {
-                if (item.quality < 50) {
-                    item.quality += 1
-                }
-            }
-        }
-        if (item.sellIn < 1) {
+        if (item.sellIn <= 0) {
             item.quality = 0
+        } else if (item.sellIn < 6) {
+            item.quality += 3
+        } else if (item.sellIn < 11) {
+            item.quality += 2
+        } else if (item.sellIn >= 11) {
+            item.quality += 1
         }
+        adjustToMinimumThreshold(item, 0)
+        adjustToMaximumThreshold(item, 50)
     }
 
     private void updateQualityForAgedBrie(Item item) {
-        if (item.quality < 50) {
-            item.quality = item.quality + 1
+        if (item.sellIn > 0) {
+            item.quality += 1
+        } else {
+            item.quality += 2
         }
-        if (item.sellIn < 0) {
-            if (item.quality < 50) {
-                item.quality = item.quality + 1
-            }
-        }
+        adjustToMaximumThreshold(item, 50)
     }
 
     private void updateQualityForItem(Item item) {
-        if (item.quality > 0) {
-            if (item.sellIn > 0) {
-                item.quality -= 1
-            } else {
-                item.quality -= 2
-            }
+        if (item.sellIn > 0) {
+            item.quality -= 1
+        } else {
+            item.quality -= 2
+        }
+        adjustToMinimumThreshold(item, 0)
+    }
+
+    private void adjustToMaximumThreshold(Item item, int threshold) {
+        if (item.quality > threshold) {
+            item.quality = threshold
+        }
+    }
+
+    private void adjustToMinimumThreshold(Item item, int threshold) {
+        if (item.quality < threshold) {
+            item.quality = threshold
         }
     }
 
