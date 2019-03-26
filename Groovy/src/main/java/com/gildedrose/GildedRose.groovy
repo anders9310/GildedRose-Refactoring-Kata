@@ -1,5 +1,11 @@
 package com.gildedrose
 
+import com.gildedrose.updater.AgedBrieUpdater
+import com.gildedrose.updater.BackstagePassUpdater
+import com.gildedrose.updater.ItemUpdater
+import com.gildedrose.updater.LegendaryItemUpdater
+import com.gildedrose.updater.RegularItemUpdater
+
 class GildedRose {
     Item[] items
     private String AGED_BRIE = "Aged Brie"
@@ -12,70 +18,21 @@ class GildedRose {
 
     void updateQuality() {
         items.each { Item item ->
-            switch (item.name) {
-                case AGED_BRIE:
-                    updateQualityForAgedBrie(item)
-                    updateSellIn(item)
-                    break
-                case BACKSTAGE_PASS:
-                    updateQualityForBackstagePass(item)
-                    updateSellIn(item)
-                    break
-                case SULFURAS:
-                    break
-                default:
-                    updateQualityForItem(item)
-                    updateSellIn(item)
-            }
-
+            ItemUpdater updater = makeItemUpdater(item)
+            updater.update()
         }
     }
 
-    private void updateQualityForBackstagePass(Item item) {
-        if (item.sellIn <= 0) {
-            item.quality = 0
-        } else if (item.sellIn < 6) {
-            item.quality += 3
-        } else if (item.sellIn < 11) {
-            item.quality += 2
-        } else if (item.sellIn >= 11) {
-            item.quality += 1
+    ItemUpdater makeItemUpdater(Item item) {
+        switch (item.name) {
+            case AGED_BRIE:
+                return new AgedBrieUpdater(item)
+            case BACKSTAGE_PASS:
+                return new BackstagePassUpdater(item)
+            case SULFURAS:
+                return new LegendaryItemUpdater(item)
+            default:
+                return new RegularItemUpdater(item)
         }
-        adjustToMinimumThreshold(item, 0)
-        adjustToMaximumThreshold(item, 50)
-    }
-
-    private void updateQualityForAgedBrie(Item item) {
-        if (item.sellIn > 0) {
-            item.quality += 1
-        } else {
-            item.quality += 2
-        }
-        adjustToMaximumThreshold(item, 50)
-    }
-
-    private void updateQualityForItem(Item item) {
-        if (item.sellIn > 0) {
-            item.quality -= 1
-        } else {
-            item.quality -= 2
-        }
-        adjustToMinimumThreshold(item, 0)
-    }
-
-    private void adjustToMaximumThreshold(Item item, int threshold) {
-        if (item.quality > threshold) {
-            item.quality = threshold
-        }
-    }
-
-    private void adjustToMinimumThreshold(Item item, int threshold) {
-        if (item.quality < threshold) {
-            item.quality = threshold
-        }
-    }
-
-    private void updateSellIn(Item item) {
-        item.sellIn = item.sellIn - 1
     }
 }
