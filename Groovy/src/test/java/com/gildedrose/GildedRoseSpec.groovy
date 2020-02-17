@@ -89,19 +89,4 @@ class GildedRoseSpec extends Specification {
             10            | 0      | 0
             10            | -1     | 0
     }
-
-    void "Item recognition is case sensitive"() {
-        given:
-            int qualityBefore = 10
-            Item specialItem = new Item(AGED_BRIE, 10, qualityBefore)
-            Item specialItemInLowercase = new Item(AGED_BRIE.toLowerCase(), 10, qualityBefore)
-            Item[] items = [specialItem, specialItemInLowercase]
-            GildedRose app = new GildedRose(items)
-        when:
-            app.updateQuality()
-        then:
-            specialItem.quality == qualityBefore + 1
-            specialItemInLowercase.quality == qualityBefore - 1
-    }
-
 }
